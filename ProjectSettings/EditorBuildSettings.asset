@@ -4,4 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/SelectGropus.unity
+    guid: 0e8ed80c1576d7e478682747f53677d2
+  - enabled: 1
+    path: Assets/Scenes/Questions.unity
+    guid: f17ae904b82849f40943b8a243a78861

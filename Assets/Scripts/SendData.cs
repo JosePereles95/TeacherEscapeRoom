@@ -18,49 +18,31 @@ public class SendData : MonoBehaviour {
 	private Firebase.Database.DataSnapshot mDataSnapshot;
 	private string urlDatabase = "https://escaperoom-b425b.firebaseio.com/";
 
-	private string grupo1ID = "";
-	private string grupo2ID = "";
-	private string grupo3ID = "";
+	private List<string> grupoIDs;
 
 	//private string questionChecked = "false";
 	//private string newDato;
 	//private string newQ1;
 
 	void Start(){
+		grupoIDs = new List<string> ();
+
 		mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
-		mDatabase.RemoveValueAsync ();
 	}
 
 	void Update(){
 		Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom").ValueChanged += HandleValueChanged;
 
-		Debug.Log (grupo1ID);
-
 		if (mDataSnapshot != null) {
-			if (mDataSnapshot.Child ("Grupos").Child ("Grupo 1").Child ("userID").GetValue (true) != null)
-				grupo1ID = mDataSnapshot.Child ("Grupos").Child ("Grupo 1").Child ("userID").GetValue (true).ToString ();
-			
-			if (mDataSnapshot.Child ("Grupos").Child ("Grupo 2").Child ("userID").GetValue (true) != null)
-				grupo2ID = mDataSnapshot.Child ("Grupos").Child ("Grupo 2").Child ("userID").GetValue (true).ToString ();
-			
-			if (mDataSnapshot.Child ("Grupos").Child ("Grupo 3").Child ("userID").GetValue (true) != null)
-				grupo3ID = mDataSnapshot.Child ("Grupos").Child ("Grupo 3").Child ("userID").GetValue (true).ToString ();
+			for (int i = 1; i <= GroupManager.numGrupos; i++) {
+				//grupoIDs.Add (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
+			}
 		}
 	}
 
-	public void CheckG1Pressed(){
-		if (grupo1ID != "")
-			mDatabase.Child (grupo1ID).Child ("Questions").Child ("question1").SetValueAsync ("true");
-	}
-
-	public void CheckG2Pressed(){
-		if (grupo2ID != "")
-			mDatabase.Child (grupo2ID).Child ("Questions").Child ("question1").SetValueAsync ("true");
-	}
-
-	public void CheckG3Pressed(){
-		if (grupo3ID != "")
-			mDatabase.Child (grupo3ID).Child ("Questions").Child ("question1").SetValueAsync ("true");
+	public void CheckQuestionPressed(){
+		string actualQuestion = EventSystem.current.currentSelectedGameObject.name;
+		mDatabase.Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (true);
 	}
 
 	void HandleValueChanged(object sender, Firebase.Database.ValueChangedEventArgs args){
