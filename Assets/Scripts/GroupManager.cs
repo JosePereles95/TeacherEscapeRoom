@@ -23,6 +23,8 @@ public class GroupManager : MonoBehaviour {
 		mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
 		mDatabase.RemoveValueAsync ();
 		numsConfirmed = new List<int> ();
+		Debug.Log ("Confirmar");
+		mDatabase.Child ("All Confirmed").SetValueAsync (false);
 	}
 	
 	// Update is called once per frame
@@ -42,8 +44,10 @@ public class GroupManager : MonoBehaviour {
 			}
 		}
 
-		if (numGrupos != 0 && numGrupos == groupsConfirmed)
+		if (numGrupos != 0 && numGrupos == groupsConfirmed) {
+			mDatabase.Child ("All Confirmed").SetValueAsync (true);
 			SceneManager.LoadScene ("Questions");
+		}
 		
 	}
 

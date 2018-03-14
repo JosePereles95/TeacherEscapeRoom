@@ -20,7 +20,7 @@ public class SendData : MonoBehaviour {
 
 	private List<string> grupoIDs;
 
-	//private string questionChecked = "false";
+//	private string questionChecked = false;
 	//private string newDato;
 	//private string newQ1;
 
@@ -35,14 +35,21 @@ public class SendData : MonoBehaviour {
 
 		if (mDataSnapshot != null) {
 			for (int i = 1; i <= GroupManager.numGrupos; i++) {
-				//grupoIDs.Add (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
+				if (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null)
+					grupoIDs.Add (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
 			}
 		}
 	}
 
 	public void CheckQuestionPressed(){
 		string actualQuestion = EventSystem.current.currentSelectedGameObject.name;
-		mDatabase.Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (true);
+
+		string questionValue = mDataSnapshot.Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (actualQuestion).GetValue (true).ToString();
+
+		if(questionValue == "True")
+			mDatabase.Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (false);
+		else
+			mDatabase.Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (true);
 	}
 
 	void HandleValueChanged(object sender, Firebase.Database.ValueChangedEventArgs args){

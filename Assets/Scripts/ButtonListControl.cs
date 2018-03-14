@@ -7,7 +7,6 @@ public class ButtonListControl : MonoBehaviour {
 	[SerializeField] private GameObject buttonTemplate;
 
 	void Start(){
-		GroupManager.numGrupos = 20;
 		for (int i = 1; i <= GroupManager.numGrupos; i++) {
 			GameObject button = Instantiate (buttonTemplate) as GameObject;
 			button.SetActive (true);
