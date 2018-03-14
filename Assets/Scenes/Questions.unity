@@ -1500,6 +1500,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a04a96714945ee478ca7470875b097a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questionsButton:
+  - {fileID: 1911151086}
+  - {fileID: 746009881}
+  - {fileID: 1808058967}
+  - {fileID: 280156204}
+  - {fileID: 1729794205}
 --- !u!4 &1432994487
 Transform:
   m_ObjectHideFlags: 0

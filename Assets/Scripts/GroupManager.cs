@@ -23,15 +23,13 @@ public class GroupManager : MonoBehaviour {
 		mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
 		mDatabase.RemoveValueAsync ();
 		numsConfirmed = new List<int> ();
-		Debug.Log ("Confirmar");
+
 		mDatabase.Child ("All Confirmed").SetValueAsync (false);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom").ValueChanged += HandleValueChanged;
-
-		Debug.Log ("Grupos: " + numGrupos + " - Confirmed: " + groupsConfirmed);
 
 		if (mDataSnapshot != null) {
 			if (numGrupos != 0 && groupsConfirmed < numGrupos) {

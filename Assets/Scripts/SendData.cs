@@ -20,12 +20,15 @@ public class SendData : MonoBehaviour {
 
 	private List<string> grupoIDs;
 
+	[SerializeField] private List<Button> questionsButton;
+
 //	private string questionChecked = false;
 	//private string newDato;
 	//private string newQ1;
 
 	void Start(){
 		grupoIDs = new List<string> ();
+		//questionsButton = new List<Button> ();
 
 		mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
 	}
@@ -37,6 +40,18 @@ public class SendData : MonoBehaviour {
 			for (int i = 1; i <= GroupManager.numGrupos; i++) {
 				if (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null)
 					grupoIDs.Add (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
+			}
+
+			for (int j = 0; j < questionsButton.Count; j++) {
+				if (ButtonListButton.groupActive != 0) {
+					string questionValue = mDataSnapshot.Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (questionsButton [j].name).GetValue (true).ToString ();
+				
+					if (questionValue == "True") {
+						questionsButton [j].image.color = Color.green;
+					} else {
+						questionsButton [j].image.color = Color.red;
+					}
+				}
 			}
 		}
 	}
