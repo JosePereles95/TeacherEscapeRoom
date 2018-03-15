@@ -8,13 +8,20 @@ using UnityEngine.SceneManagement;
 public class GroupManager : MonoBehaviour {
 
 	public static int numGrupos = 0;
+	public static int minsJuego = 0;
 
 	private Firebase.Database.DatabaseReference mDatabase;
 	private Firebase.Database.DataSnapshot mDataSnapshot;
 	private string urlDatabase = "https://escaperoom-b425b.firebaseio.com/";
 
 	[SerializeField] private InputField inputNumGrupos;
+	[SerializeField] private InputField inputTiempo;
+	[SerializeField] private Button buttonTiempo;
 	[SerializeField] private Text waitingGroups;
+
+	private bool gruposOk = false;
+	private bool tiempoOk = false;
+
 	private int groupsConfirmed = 0;
 	private List<int> numsConfirmed;
 
@@ -44,14 +51,31 @@ public class GroupManager : MonoBehaviour {
 			mDatabase.Child ("All Confirmed").SetValueAsync (true);
 			SceneManager.LoadScene ("Questions");
 		}
-		
+
+		if (gruposOk) {
+			inputTiempo.gameObject.SetActive (true);
+			buttonTiempo.gameObject.SetActive (true);
+		}
+
+		if(tiempoOk)
+			waitingGroups.gameObject.SetActive (true);
 	}
 
 	public void ConfirmarGrupos(){
-		if (inputNumGrupos.text != "0" && inputNumGrupos.text != "") {
+		if (inputNumGrupos.text != "0" && inputNumGrupos.text != "" && numGrupos == 0) {
 			numGrupos = int.Parse (inputNumGrupos.text);
 			mDatabase.Child ("Num Grupos").SetValueAsync (numGrupos);
-			waitingGroups.gameObject.SetActive (true);
+			gruposOk = true;
+			inputNumGrupos.GetComponent<InputField> ().enabled = false;
+		}
+	}
+
+	public void ConfirmarTiempo(){
+		if (inputTiempo.text != "0" && inputTiempo.text != "" && minsJuego == 0) {
+			minsJuego = int.Parse (inputTiempo.text);
+			mDatabase.Child ("Tiempo").SetValueAsync (minsJuego);
+			tiempoOk = true;
+			inputTiempo.GetComponent<InputField> ().enabled = false;
 		}
 	}
 
