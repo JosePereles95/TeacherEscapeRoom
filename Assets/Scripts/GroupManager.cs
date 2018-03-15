@@ -47,7 +47,7 @@ public class GroupManager : MonoBehaviour {
 			}
 		}
 
-		if (numGrupos != 0 && numGrupos == groupsConfirmed) {
+		if (numGrupos != 0 && numGrupos == groupsConfirmed && tiempoOk) {
 			mDatabase.Child ("All Confirmed").SetValueAsync (true);
 			SceneManager.LoadScene ("Questions");
 		}
