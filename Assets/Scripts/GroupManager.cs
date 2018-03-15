@@ -18,7 +18,6 @@ public class GroupManager : MonoBehaviour {
 	private int groupsConfirmed = 0;
 	private List<int> numsConfirmed;
 
-	// Use this for initialization
 	void Start () {
 		mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
 		mDatabase.RemoveValueAsync ();
@@ -26,8 +25,7 @@ public class GroupManager : MonoBehaviour {
 
 		mDatabase.Child ("All Confirmed").SetValueAsync (false);
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 		Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom").ValueChanged += HandleValueChanged;
 
@@ -58,11 +56,9 @@ public class GroupManager : MonoBehaviour {
 	}
 
 	void HandleValueChanged(object sender, Firebase.Database.ValueChangedEventArgs args){
-		//check++;
 
 		if (args.DatabaseError != null) {
 			Debug.LogError(args.DatabaseError.Message);
-			//consolaAndroid.text = "ERROR";
 			return;
 		}
 		mDataSnapshot = args.Snapshot;

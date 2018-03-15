@@ -6,14 +6,7 @@ using UnityEngine.EventSystems;
 using Firebase;
 
 public class SendData : MonoBehaviour {
-
-	//public InputField data;
-	//public InputField readData;
-	//public InputField q1Data;
-
-	//public InputField consolaAndroid;
-	//public int check = 0;
-
+	
 	private Firebase.Database.DatabaseReference mDatabase;
 	private Firebase.Database.DataSnapshot mDataSnapshot;
 	private string urlDatabase = "https://escaperoom-b425b.firebaseio.com/";
@@ -22,13 +15,8 @@ public class SendData : MonoBehaviour {
 
 	[SerializeField] private List<Button> questionsButton;
 
-//	private string questionChecked = false;
-	//private string newDato;
-	//private string newQ1;
-
 	void Start(){
 		grupoIDs = new List<string> ();
-		//questionsButton = new List<Button> ();
 
 		mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
 	}
@@ -68,14 +56,11 @@ public class SendData : MonoBehaviour {
 	}
 
 	void HandleValueChanged(object sender, Firebase.Database.ValueChangedEventArgs args){
-		//check++;
 
 		if (args.DatabaseError != null) {
 			Debug.LogError(args.DatabaseError.Message);
-			//consolaAndroid.text = "ERROR";
 			return;
 		}
 		mDataSnapshot = args.Snapshot;
 	}
-		
 }
