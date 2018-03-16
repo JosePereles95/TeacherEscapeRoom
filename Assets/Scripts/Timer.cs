@@ -4,24 +4,25 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class Timer : MonoBehaviour{
-	
+
+	//private Firebase.Database.DatabaseReference mDatabase;
 	private Firebase.Database.DataSnapshot mDataSnapshot;
 	private string urlDatabase = "https://escaperoom-b425b.firebaseio.com/";
 
 	[SerializeField] private float tiempo = 0.0f;
-	private int tiempoTotal = 0;
+	private float tiempoTotal = 0.0f;
 	private bool asignado = false;
 	[SerializeField] private Text textTiempo;
 
 	void Start(){
-		
+		//mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
 	}
 
 	void Update(){
 		Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom").ValueChanged += HandleValueChanged;
 
 		if (mDataSnapshot != null) {
-			tiempoTotal = int.Parse (mDataSnapshot.Child ("Tiempo").GetValue (true).ToString ());
+			tiempoTotal = float.Parse (mDataSnapshot.Child ("Tiempo").GetValue (true).ToString ());
 		}
 
 		if (tiempoTotal != 0 && !asignado) {
@@ -30,6 +31,8 @@ public class Timer : MonoBehaviour{
 		}
 
 		tiempo -= Time.deltaTime;
+
+		//mDatabase.Child ("Tiempo").SetValueAsync (tiempo);
 
 		int horas = ((int) tiempo / 3600);
 		int minutos = (((int) tiempo - horas * 3600) / 60);

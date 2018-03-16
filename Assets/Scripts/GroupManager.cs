@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class GroupManager : MonoBehaviour {
 
 	public static int numGrupos = 0;
-	public static int minsJuego = 0;
+	public static float minsJuego = 0;
 
 	private Firebase.Database.DatabaseReference mDatabase;
 	private Firebase.Database.DataSnapshot mDataSnapshot;
@@ -72,7 +72,7 @@ public class GroupManager : MonoBehaviour {
 
 	public void ConfirmarTiempo(){
 		if (inputTiempo.text != "0" && inputTiempo.text != "" && minsJuego == 0) {
-			minsJuego = int.Parse (inputTiempo.text);
+			minsJuego = float.Parse (inputTiempo.text);
 			mDatabase.Child ("Tiempo").SetValueAsync (minsJuego);
 			tiempoOk = true;
 			inputTiempo.GetComponent<InputField> ().enabled = false;
