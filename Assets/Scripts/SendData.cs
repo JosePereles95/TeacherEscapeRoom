@@ -15,6 +15,10 @@ public class SendData : MonoBehaviour {
 
 	[SerializeField] private List<Button> questionsButton;
 
+	void Awake(){
+		Application.targetFrameRate = 20;
+	}
+
 	void Start(){
 		grupoIDs = new List<string> ();
 
@@ -26,8 +30,9 @@ public class SendData : MonoBehaviour {
 
 		if (mDataSnapshot != null) {
 			for (int i = 1; i <= GroupManager.numGrupos; i++) {
-				if (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null)
+				if (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null) {
 					grupoIDs.Add (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
+				}
 			}
 
 			for (int j = 0; j < questionsButton.Count; j++) {
@@ -56,7 +61,6 @@ public class SendData : MonoBehaviour {
 	}
 
 	void HandleValueChanged(object sender, Firebase.Database.ValueChangedEventArgs args){
-
 		if (args.DatabaseError != null) {
 			Debug.LogError(args.DatabaseError.Message);
 			return;

@@ -19,6 +19,7 @@ public class ButtonListButton : MonoBehaviour {
 		GameObject actualButton = EventSystem.current.currentSelectedGameObject;
 		groupText.text = actualButton.GetComponentInChildren<Text> ().text;
 		groupActive = int.Parse (groupText.text [6].ToString());
+		Debug.Log ("GRUPO " + groupActive);
 		myCanvas.SetActive (true);
 	}
 }

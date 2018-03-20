@@ -72,7 +72,7 @@ public class GroupManager : MonoBehaviour {
 
 	public void ConfirmarTiempo(){
 		if (inputTiempo.text != "0" && inputTiempo.text != "" && minsJuego == 0) {
-			minsJuego = float.Parse (inputTiempo.text);
+			minsJuego = float.Parse (inputTiempo.text) * 60;
 			mDatabase.Child ("Tiempo").SetValueAsync (minsJuego);
 			tiempoOk = true;
 			inputTiempo.GetComponent<InputField> ().enabled = false;
