@@ -21,50 +21,72 @@ public class GroupManager : MonoBehaviour {
 
 	private bool gruposOk = false;
 	private bool tiempoOk = false;
+	private bool sesionOk = false;
 
 	private int groupsConfirmed = 0;
 	private List<int> numsConfirmed;
+	
+	public static int actualSesion = 0;
 
 	void Start () {
 		mDatabase = Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom");
-		mDatabase.RemoveValueAsync ();
-		numsConfirmed = new List<int> ();
-
-		mDatabase.Child ("All Confirmed").SetValueAsync (false);
 	}
 
 	void Update () {
 		Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom").ValueChanged += HandleValueChanged;
 
 		if (mDataSnapshot != null) {
-			if (numGrupos != 0 && groupsConfirmed < numGrupos) {
-				for (int i = 1; i <= numGrupos; i++) {
-					if (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).GetValue(true) != null && !numsConfirmed.Contains(i)){
-						groupsConfirmed++;
-						numsConfirmed.Add (i);
+			if(sesionOk){
+				if (numGrupos != 0 && groupsConfirmed < numGrupos) {
+					for (int i = 1; i <= numGrupos; i++) {
+						if (mDataSnapshot.Child("Sesion " + actualSesion).Child ("Grupos").Child ("Grupo " + i).GetValue(true) != null && !numsConfirmed.Contains(i)){
+							groupsConfirmed++;
+							numsConfirmed.Add (i);
+						}
 					}
 				}
+
+				if (numGrupos != 0 && numGrupos == groupsConfirmed && tiempoOk) {
+					mDatabase.Child("Sesion " + actualSesion).Child ("All Confirmed").SetValueAsync (true);
+					SceneManager.LoadScene ("Questions");
+				}
+
+				if (gruposOk) {
+					inputTiempo.gameObject.SetActive (true);
+					buttonTiempo.gameObject.SetActive (true);
+				}
+
+				if(tiempoOk)
+					waitingGroups.gameObject.SetActive (true);
+				
+			}
+			else if (mDataSnapshot.Child ("Sesiones").GetValue(true) != null){
+				
+				int sesionAnterior = int.Parse(mDataSnapshot.Child ("Sesiones").GetValue (true).ToString());
+				
+				actualSesion = sesionAnterior + 1;
+
+				mDatabase.Child ("Sesiones").SetValueAsync (actualSesion);
+				
+				mDatabase.Child("Sesion " + actualSesion).Child ("All Confirmed").SetValueAsync (false);
+				
+				//mDatabase.RemoveValueAsync ();
+				numsConfirmed = new List<int> ();
+
+				mDatabase.Child("Sesion " + actualSesion).Child ("All Confirmed").SetValueAsync (false);
+				
+				sesionOk = true;
+			}
+			else{
+				mDatabase.Child ("Sesiones").SetValueAsync (0);
 			}
 		}
-
-		if (numGrupos != 0 && numGrupos == groupsConfirmed && tiempoOk) {
-			mDatabase.Child ("All Confirmed").SetValueAsync (true);
-			SceneManager.LoadScene ("Questions");
-		}
-
-		if (gruposOk) {
-			inputTiempo.gameObject.SetActive (true);
-			buttonTiempo.gameObject.SetActive (true);
-		}
-
-		if(tiempoOk)
-			waitingGroups.gameObject.SetActive (true);
 	}
 
 	public void ConfirmarGrupos(){
 		if (inputNumGrupos.text != "0" && inputNumGrupos.text != "" && numGrupos == 0) {
 			numGrupos = int.Parse (inputNumGrupos.text);
-			mDatabase.Child ("Num Grupos").SetValueAsync (numGrupos);
+			mDatabase.Child("Sesion " + actualSesion).Child ("Num Grupos").SetValueAsync (numGrupos);
 			gruposOk = true;
 			inputNumGrupos.GetComponent<InputField> ().enabled = false;
 		}
@@ -73,7 +95,7 @@ public class GroupManager : MonoBehaviour {
 	public void ConfirmarTiempo(){
 		if (inputTiempo.text != "0" && inputTiempo.text != "" && minsJuego == 0) {
 			minsJuego = float.Parse (inputTiempo.text) * 60;
-			mDatabase.Child ("Tiempo").SetValueAsync (minsJuego);
+			mDatabase.Child("Sesion " + actualSesion).Child ("Tiempo").SetValueAsync (minsJuego);
 			tiempoOk = true;
 			inputTiempo.GetComponent<InputField> ().enabled = false;
 		}

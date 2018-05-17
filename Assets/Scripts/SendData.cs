@@ -30,14 +30,14 @@ public class SendData : MonoBehaviour {
 
 		if (mDataSnapshot != null) {
 			for (int i = 1; i <= GroupManager.numGrupos; i++) {
-				if (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null) {
-					grupoIDs.Add (mDataSnapshot.Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
+				if (mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null) {
+					grupoIDs.Add (mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
 				}
 			}
 
 			for (int j = 0; j < questionsButton.Count; j++) {
 				if (ButtonListButton.groupActive != 0) {
-					string questionValue = mDataSnapshot.Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (questionsButton [j].name).GetValue (true).ToString ();
+					string questionValue = mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (questionsButton [j].name).GetValue (true).ToString ();
 				
 					if (questionValue == "True") {
 						questionsButton [j].image.color = Color.green;
@@ -52,12 +52,12 @@ public class SendData : MonoBehaviour {
 	public void CheckQuestionPressed(){
 		string actualQuestion = EventSystem.current.currentSelectedGameObject.name;
 
-		string questionValue = mDataSnapshot.Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (actualQuestion).GetValue (true).ToString();
+		string questionValue = mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (actualQuestion).GetValue (true).ToString();
 
 		if(questionValue == "True")
-			mDatabase.Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (false);
+			mDatabase.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (false);
 		else
-			mDatabase.Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (true);
+			mDatabase.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (true);
 	}
 
 	void HandleValueChanged(object sender, Firebase.Database.ValueChangedEventArgs args){
