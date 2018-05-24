@@ -6,12 +6,12 @@ using UnityEngine.EventSystems;
 using Firebase;
 
 public class SendData : MonoBehaviour {
-	
+
+	public static List<string> grupoIDs;
+
 	private Firebase.Database.DatabaseReference mDatabase;
 	private Firebase.Database.DataSnapshot mDataSnapshot;
 	private string urlDatabase = "https://escaperoom-b425b.firebaseio.com/";
-
-	private List<string> grupoIDs;
 
 	[SerializeField] private List<Button> questionsButton;
 
@@ -38,11 +38,13 @@ public class SendData : MonoBehaviour {
 			for (int j = 0; j < questionsButton.Count; j++) {
 				if (ButtonListButton.groupActive != 0) {
 					string questionValue = mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (questionsButton [j].name).GetValue (true).ToString ();
-				
-					if (questionValue == "True") {
-						questionsButton [j].image.color = Color.green;
-					} else {
-						questionsButton [j].image.color = Color.red;
+
+					if (mDataSnapshot.Child ("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Detection").Child (questionsButton [j].name).GetValue (true).ToString () == "True") {
+						if (questionValue == "True") {
+							questionsButton [j].image.color = Color.green;
+						} else {
+							questionsButton [j].image.color = Color.red;
+						}
 					}
 				}
 			}
@@ -54,10 +56,12 @@ public class SendData : MonoBehaviour {
 
 		string questionValue = mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (actualQuestion).GetValue (true).ToString();
 
-		if(questionValue == "True")
-			mDatabase.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (false);
-		else
-			mDatabase.Child("Sesion " + GroupManager.actualSesion).Child (grupoIDs[ButtonListButton.groupActive-1]).Child ("Questions").Child (actualQuestion).SetValueAsync (true);
+		if (mDataSnapshot.Child ("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Detection").Child (actualQuestion).GetValue (true).ToString () == "True") {
+			if (questionValue == "True")
+				mDatabase.Child ("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (actualQuestion).SetValueAsync (false);
+			else
+				mDatabase.Child ("Sesion " + GroupManager.actualSesion).Child (grupoIDs [ButtonListButton.groupActive - 1]).Child ("Questions").Child (actualQuestion).SetValueAsync (true);
+		}
 	}
 
 	void HandleValueChanged(object sender, Firebase.Database.ValueChangedEventArgs args){
