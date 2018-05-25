@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour{
 
@@ -34,5 +35,6 @@ public class Timer : MonoBehaviour{
 
 	void TiempoAgotado(){
 		Debug.Log ("Se acabó el tiempo");
+		SceneManager.LoadScene ("Final Scene");
 	}
 }

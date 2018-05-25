@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Questions.unity
     guid: f17ae904b82849f40943b8a243a78861
+  - enabled: 1
+    path: Assets/Scenes/Final Scene.unity
+    guid: 86f2e7ad2ff323143ad00a03d017e5ff

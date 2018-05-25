@@ -18,6 +18,7 @@ public class FinalResult : MonoBehaviour {
 
 	[SerializeField] private Text waitingText;
 	[SerializeField] private List<Text> top;
+	[SerializeField] private List<Text> puestoText;
 
 	void Start () {
 		resultadosFinales = new List<int> ();
@@ -30,7 +31,7 @@ public class FinalResult : MonoBehaviour {
 		if (mDataSnapshot != null) {
 			if (!allTerminados) {
 				int terminados = 0;
-
+				Debug.Log ("Final: " + SendData.grupoIDs.Count);
 				for (int i = 0; i < SendData.grupoIDs.Count; i++) {
 					if (mDataSnapshot.Child ("Sesion " + GroupManager.actualSesion).Child (SendData.grupoIDs [i]).Child ("Resultado").GetValue (true) != null)
 						terminados++;
@@ -40,6 +41,7 @@ public class FinalResult : MonoBehaviour {
 					allTerminados = true;
 			}
 			else {
+				Debug.Log ("Terminado");
 				if(!allDone)
 					CheckResults ();
 			}
@@ -60,18 +62,30 @@ public class FinalResult : MonoBehaviour {
 			sortedResults.Add (resultadosFinales [j]);
 
 		sortedResults.Sort ();
-
+		int antIndex = -1;
+		int repetido = 0;
 		for (int k = 0; k < resultadosFinales.Count; k++) {
 
 			int highestValue = sortedResults [sortedResults.Count - 1];
 			int index = resultadosFinales.FindIndex (a => a == highestValue);
 
-			mDatabase.Child ("Sesion " + GroupManager.actualSesion).Child (SendData.grupoIDs [index]).Child ("Puesto").SetValueAsync (k + 1);
 
+			if (index == antIndex) {
+				repetido++;
+			}
+			else {
+				antIndex = index;
+				repetido = 0;
+			}
+
+			mDatabase.Child ("Sesion " + GroupManager.actualSesion).Child (SendData.grupoIDs [index + repetido]).Child ("Puesto").SetValueAsync (k + 1 - repetido);
+			Debug.Log ("Index: " + index + "; Index real: " + (index + repetido) 
+				+ "; Highest: " + highestValue + "; K: " + k + "; Puesto: " + (k + 1 - repetido));
 			sortedResults.Remove (highestValue);
-
+			index++;
 			if (k < 3) {
-				top [k].text = "Grupo " + index;
+				puestoText [k].text = "Top " + (k + 1 - repetido);
+				top [k].text = "Grupo " + (index + repetido);
 			}
 		}
 	}

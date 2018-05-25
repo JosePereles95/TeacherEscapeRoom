@@ -793,6 +793,10 @@ MonoBehaviour:
   - {fileID: 367098550}
   - {fileID: 1771592471}
   - {fileID: 565272448}
+  puestoText:
+  - {fileID: 616766835}
+  - {fileID: 1048610999}
+  - {fileID: 157752993}
 --- !u!4 &1395493970
 Transform:
   m_ObjectHideFlags: 0
@@ -869,11 +873,11 @@ MonoBehaviour:
     m_MaxSize: 100
     m_Alignment: 4
     m_AlignByGeometry: 0
-    m_RichText: 1
+    m_RichText: 0
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Esperando a que los alumnos agoten  el tiempo disponible...
+  m_Text: Esperando a que los alumnos agoten el tiempo disponible...
 --- !u!222 &1426449678
 CanvasRenderer:
   m_ObjectHideFlags: 0

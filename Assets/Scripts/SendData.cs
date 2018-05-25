@@ -15,6 +15,8 @@ public class SendData : MonoBehaviour {
 
 	[SerializeField] private List<Button> questionsButton;
 
+	private bool groupsAdded = false;
+
 	void Awake(){
 		Application.targetFrameRate = 20;
 	}
@@ -27,12 +29,16 @@ public class SendData : MonoBehaviour {
 
 	void Update(){
 		Firebase.Database.FirebaseDatabase.GetInstance (urlDatabase).GetReference("/EscapeRoom").ValueChanged += HandleValueChanged;
-
+		Debug.Log ("Normal: " + grupoIDs.Count);
 		if (mDataSnapshot != null) {
-			for (int i = 1; i <= GroupManager.numGrupos; i++) {
-				if (mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null) {
-					grupoIDs.Add (mDataSnapshot.Child("Sesion " + GroupManager.actualSesion).Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
+
+			if (!groupsAdded) {
+				for (int i = 1; i <= GroupManager.numGrupos; i++) {
+					if (mDataSnapshot.Child ("Sesion " + GroupManager.actualSesion).Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true) != null) {
+						grupoIDs.Add (mDataSnapshot.Child ("Sesion " + GroupManager.actualSesion).Child ("Grupos").Child ("Grupo " + i).Child ("userID").GetValue (true).ToString ());
+					}
 				}
+				groupsAdded = true;
 			}
 
 			for (int j = 0; j < questionsButton.Count; j++) {
